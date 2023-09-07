@@ -3,6 +3,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  env: {
+    appName: 'trainKEEPER.',
+  },
   swcMinify: true,
 };
 
