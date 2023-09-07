@@ -1,5 +1,4 @@
 import Navbar from "@/components/navbar/navbar";
-import Video from "@/components/video";
 import Image from "next/image";
 import Link from "next/link";
 

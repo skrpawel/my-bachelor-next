@@ -6,7 +6,6 @@ import { Toaster } from "react-hot-toast";
 import AuthStatus from "@/components/auth-status";
 import { Suspense } from "react";
 import Navbar from "@/components/navbar/navbar";
-import Video from "@/components/video";
 import { GlobalContextProvider } from "./context/store";
 
 const inter = Inter({
