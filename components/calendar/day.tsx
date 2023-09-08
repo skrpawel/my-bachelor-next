@@ -1,5 +1,8 @@
+"use client";
+import { useGlobalContext } from "@/app/context/store";
 import dayjs, { type Dayjs } from "dayjs";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
 
 interface DayProps {
   rowIdx: number;
@@ -13,8 +16,36 @@ export default function Day({ day, rowIdx }: DayProps) {
       : "";
   };
 
+  const { setShowModal, setSelectedDay } = useGlobalContext();
+  const [isShown, setIsShown] = useState(false);
+
+  const [savedEvents, setSavedEvents] = useState([{ date: dayjs() }]);
+  const [workouts, setWorkouts] = useState([
+    {
+      type: "Run",
+      duration: "1h",
+      date: day,
+    },
+  ]);
+
+  const handleDayClick = () => {
+    setShowModal(true);
+    setSelectedDay(day);
+  };
+
+  useEffect(() => {
+    const events = savedEvents.filter(
+      (event) => dayjs(event.date).format("DD-MM-YY") === day.format("DD-MM-YY")
+    );
+  }, [savedEvents]);
+
   return (
-    <div className="border border-grey-200 flex flex-col hover:bg-[#EB5E28] hover:border-black hover:cursor-pointer">
+    <div
+      className="border border-gray-200 flex flex-col items-center hover:bg-[#EB5E28] hover:border-gray-400 hover:cursor-pointer justify-between py-4"
+      onClick={handleDayClick}
+      onMouseOver={() => setIsShown(true)}
+      onMouseOut={() => setIsShown(false)}
+    >
       <div className="flex flex-col items-center">
         {rowIdx === 0 ? (
           <p className={`text-sm mt-1 `}>{day.format("ddd").toUpperCase()}</p>
@@ -25,6 +56,13 @@ export default function Day({ day, rowIdx }: DayProps) {
           {day.format("DD")}
         </p>
       </div>
+      {isShown ? (
+        <>
+          <AiOutlinePlus />
+        </>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

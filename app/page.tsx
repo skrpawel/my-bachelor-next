@@ -1,30 +1,26 @@
-import Navbar from "@/components/navbar/navbar";
-import Image from "next/image";
-import Link from "next/link";
-
 export default function Home() {
   return (
     <div>
       <div className="flex bg-runner bg-cover h-screen items-center justify-center font-bold p-24">
         <div className="text-center text-black w-1/2">
           <h1 className="text-8xl">
-            WELCOME TO&nbsp;
-            <span className="text-[#EB5E28] font-outline-0 ">
+            WELCOME TO THE&nbsp;
+            <span className="text-prime font-outline-0 ">
               {process.env.appName}
             </span>
           </h1>
           <h2 className="text-2xl">YOUR ULTIMATE TRAINING COMPANION.</h2>
         </div>
       </div>
-      <div className="flex h-screen items-center justify-center font-bold p-24">
-        <div className="text-center text-black w-1/2">
-          <h1 className="text-8xl">
-            WELCOME TO&nbsp;
-            <span className="text-[#EB5E28] font-outline-0 ">
-              {process.env.appName}
-            </span>
-          </h1>
-          <h2 className="text-2xl">YOUR ULTIMATE TRAINING COMPANION.</h2>
+      <div className="flex h-screen items-center justify-center p-24">
+        <div className="text-left text-black w-1/2">
+          <h3 className="text-6xl py-4 font-bold text-prime">
+            Achieve Your Peak Performance
+          </h3>
+          <p className="text-xl">
+            Our intuitive design make it easy to set goals and monitor your
+            progress. Unleash your true potential with every workout.
+          </p>
         </div>
       </div>
     </div>

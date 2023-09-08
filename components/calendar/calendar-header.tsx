@@ -1,6 +1,6 @@
 import { useGlobalContext } from "@/app/context/store";
 import dayjs from "dayjs";
-import React, { useContext } from "react";
+import React from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 export const CalendarHeader = () => {
   const { monthIndex, setMonthIndex } = useGlobalContext();

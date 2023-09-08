@@ -8,7 +8,10 @@ module.exports = {
     extend: {
       backgroundImage: {
         'runner': "url('../public/runner.jpg')",
-      }
+      },
+      colors: {
+        'prime': '#EB5E28',
+      },
     },
   },
   plugins: [],

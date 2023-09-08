@@ -1,8 +1,7 @@
 "use client";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, {
   Dispatch,
-  ReactNode,
   SetStateAction,
   createContext,
   useContext,
@@ -12,18 +11,38 @@ import React, {
 interface ContextProps {
   monthIndex: number;
   setMonthIndex: Dispatch<SetStateAction<number>>;
+  showModal: boolean;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  selectedDay: Dayjs;
+  setSelectedDay: Dispatch<SetStateAction<Dayjs>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
   monthIndex: 0,
-  setMonthIndex: (): number => 0,
+  setMonthIndex: () => {},
+  showModal: false,
+  setShowModal: () => {},
+  selectedDay: dayjs(),
+  setSelectedDay: () => {},
 });
 
 export const GlobalContextProvider = ({ children }: any) => {
   const [monthIndex, setMonthIndex] = useState(dayjs().month());
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(dayjs());
+
   return (
-    <GlobalContext.Provider value={{ monthIndex, setMonthIndex }}>
-      {children}{" "}
+    <GlobalContext.Provider
+      value={{
+        monthIndex,
+        setMonthIndex,
+        showModal,
+        setShowModal,
+        selectedDay,
+        setSelectedDay,
+      }}
+    >
+      {children}
     </GlobalContext.Provider>
   );
 };
