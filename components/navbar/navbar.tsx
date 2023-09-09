@@ -26,7 +26,7 @@ const Navbar = () => {
             {process.env.appName}
           </h1>
         </Link>
-        <ul className="hidden md:flex md:justify-end">
+        <ul className="hidden md:flex md:justify-end uppercase">
           <NavbarElement href="/" label="Home" onClick={() => {}} />
           <NavbarElement href="/calendar" label="Calendar" />
           <NavbarElement href="/login" label="Login" />

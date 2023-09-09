@@ -13,8 +13,12 @@ const NavbarElement: React.FC<NavbarElementProps> = ({
   onClick,
 }) => {
   return (
-    <Link href={href} onClick={onClick}>
-      <li className="px-4">{label}</li>
+    <Link
+      href={href}
+      onClick={onClick}
+      className="hover:text-prime hover:font-bold text-center"
+    >
+      <li className="w-28">{label}</li>
     </Link>
   );
 };
