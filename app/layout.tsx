@@ -7,6 +7,7 @@ import AuthStatus from "@/components/auth-status";
 import { Suspense } from "react";
 import Navbar from "@/components/navbar/navbar";
 import { GlobalContextProvider } from "./context/store";
+import { Footer } from "@/components/footer/footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,6 +47,7 @@ export default async function RootLayout({
             </Suspense>
             <Navbar />
             {children}
+            <Footer />
           </GlobalContextProvider>
         </div>
       </body>
