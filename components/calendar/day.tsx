@@ -1,68 +1,76 @@
 "use client";
-import { useGlobalContext } from "@/app/context/store";
-import dayjs, { type Dayjs } from "dayjs";
 import React, { useEffect, useState } from "react";
+import dayjs, { type Dayjs } from "dayjs";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useGlobalContext } from "@/app/context/store";
+import { SavedEvent } from "@/app/context/store";
+import axios from "axios";
 
 interface DayProps {
-  rowIdx: number;
   day: Dayjs;
 }
 
-export default function Day({ day, rowIdx }: DayProps) {
-  const getCurrentDay = () => {
-    return day.format("DD-MM-YY") === dayjs().format("DD-MM-YY")
-      ? "bg-[#EB5E28] text-white rounded-full w-7"
-      : "";
-  };
+export default function Day({ day }: DayProps) {
+  const isCurrentDay = () =>
+    day.format("DD-MM-YY") !== dayjs().format("DD-MM-YY");
 
-  const { setShowModal, setSelectedDay } = useGlobalContext();
+  const { setShowModal, setSelectedDay, savedEvents } = useGlobalContext();
   const [isShown, setIsShown] = useState(false);
-
-  const [savedEvents, setSavedEvents] = useState([{ date: dayjs() }]);
-  const [workouts, setWorkouts] = useState([
-    {
-      type: "Run",
-      duration: "1h",
-      date: day,
-    },
-  ]);
+  const [workouts, setWorkouts] = useState<SavedEvent[]>([]);
 
   const handleDayClick = () => {
     setShowModal(true);
     setSelectedDay(day);
   };
 
+  const updateDayClick = () => {
+    setShowModal(true);
+
+    setSelectedDay(day);
+  };
+
   useEffect(() => {
-    const events = savedEvents.filter(
+    const events = (savedEvents || []).filter(
       (event) => dayjs(event.date).format("DD-MM-YY") === day.format("DD-MM-YY")
     );
+
+    setWorkouts(events);
   }, [savedEvents]);
 
   return (
     <div
-      className="border border-gray-200 flex flex-col items-center hover:bg-[#EB5E28] hover:border-gray-400 hover:cursor-pointer justify-between py-4"
-      onClick={handleDayClick}
+      className="border border-gray-200 flex flex-col items-center p-2"
       onMouseOver={() => setIsShown(true)}
       onMouseOut={() => setIsShown(false)}
     >
-      <div className="flex flex-col items-center">
-        {rowIdx === 0 ? (
-          <p className={`text-sm mt-1 `}>{day.format("ddd").toUpperCase()}</p>
+      <div
+        className={`flex flex-col items-center border-b w-full ${
+          isCurrentDay() ? "border-gray-200" : "border-prime border-b-4"
+        }`}
+      >
+        <p className="text-sm text-center">{day.format("DD")}</p>
+      </div>
+      <div className=" w-full h-12 my-2">
+        {workouts.map((workout, i) => (
+          <div
+            key={`${workout.type}_${i}`}
+            className="border-gray-200 border flex justify-center hover:cursor-pointer w-full py-2 relative"
+            onClick={updateDayClick}
+          >
+            {workout.type}
+          </div>
+        ))}
+        {isShown ? (
+          <div
+            className="border-gray-200 border flex justify-center hover:cursor-pointer w-full py-2 "
+            onClick={handleDayClick}
+          >
+            <AiOutlinePlus />
+          </div>
         ) : (
           ""
         )}
-        <p className={`text-sm p-1 my-1 text-center ${getCurrentDay()}`}>
-          {day.format("DD")}
-        </p>
       </div>
-      {isShown ? (
-        <>
-          <AiOutlinePlus />
-        </>
-      ) : (
-        ""
-      )}
     </div>
   );
 }

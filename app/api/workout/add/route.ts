@@ -27,6 +27,9 @@ export async function POST(req: Request) {
     return NextResponse.json(workout);
   } catch (error) {
     // Handle the error appropriately
-    return NextResponse.json({ error: "Error adding workout" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error adding workout" },
+      { status: 500 }
+    );
   }
 }

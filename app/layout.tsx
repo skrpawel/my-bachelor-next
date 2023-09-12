@@ -8,6 +8,9 @@ import { Suspense } from "react";
 import Navbar from "@/components/navbar/navbar";
 import { GlobalContextProvider } from "./context/store";
 import { Footer } from "@/components/footer/footer";
+import Provider from "./context/client-provider";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,18 +38,21 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={inter.variable}>
         <div className="min-h-screen">
           <GlobalContextProvider>
-            <Toaster />
-            <Suspense fallback="Loading...">
-              {/* @ts-expect-error Async Server Component */}
-              <AuthStatus />
-            </Suspense>
-            <Navbar />
-            {children}
+            <Provider session={session}>
+              <Toaster />
+              <Suspense fallback="Loading...">
+                {/* @ts-expect-error Async Server Component */}
+                <AuthStatus />
+              </Suspense>
+              <Navbar />
+              {children}
+            </Provider>
             <Footer />
           </GlobalContextProvider>
         </div>

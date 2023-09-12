@@ -8,10 +8,10 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { email, password } = credentials ?? {}
+        const { email, password } = credentials ?? {};
         if (!email || !password) {
           throw new Error("Missing username or password");
         }
