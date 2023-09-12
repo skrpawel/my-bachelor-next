@@ -26,11 +26,11 @@ export default function Month({ month }: { month: Dayjs[][] }) {
   }, []); // Consider the dependencies you need here.
 
   return (
-    <div className="flex-1 grid grid-cols-7 grid-rows-5 h-full bg-white">
+    <div className=" grid grid-cols-7 grid-rows-5  bg-white">
       {month.map((row, i) => (
         <React.Fragment key={i}>
           {row.map((day, idx) => (
-            <Day key={idx} day={day} />
+            <Day key={`${day.format("DD-MM-YY")}${idx}`} day={day} />
           ))}
         </React.Fragment>
       ))}

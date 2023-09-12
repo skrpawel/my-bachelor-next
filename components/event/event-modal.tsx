@@ -100,9 +100,7 @@ export default function EventModal() {
           <div className="flex gap-4 items-center">
             <button
               className="p-2 border border-prime text-prime"
-              onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-                handleDelete(e, selectedEventId)
-              }
+              onClick={(e: any) => handleDelete(e, parseInt(selectedEventId))}
             >
               Delete workout
             </button>
@@ -122,7 +120,10 @@ export default function EventModal() {
               />
             ))}
           </div>
-          Planned values
+          <div className="grid grid-cols-2 w-full">
+            <h1>Planned values:</h1>
+            <h1>Pace:</h1>
+          </div>
           <div className="flex gap-2">
             <div className="flex">
               <input
