@@ -8,12 +8,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 
 const Navbar = () => {
-  const [nav, setNav] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleNav = () => {
-    setNav(!nav);
-  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -60,35 +55,22 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <div className=" md:hidden pb-6 text-white">
             <ul className="uppercase mt-2 space-y-2 flex flex-col w-full items-center text-2xl">
-              <NavbarElement href="/" label="Home" onClick={toggleMobileMenu} />
-              <NavbarElement
-                href="/calendar"
-                label="Calendar"
-                onClick={toggleMobileMenu}
-              />
+              <NavbarElement href="/" label="Home" />
+              <NavbarElement href="/calendar" label="Calendar" />
               {session?.user ? (
                 <>
                   <NavbarElement
                     href="/login"
                     label="Sign out"
                     onClick={() => {
-                      toggleMobileMenu();
                       signOut();
                     }}
                   />
                 </>
               ) : (
                 <>
-                  <NavbarElement
-                    href="/login"
-                    label="Login"
-                    onClick={toggleMobileMenu}
-                  />
-                  <NavbarElement
-                    href="/register"
-                    label="Sign Up"
-                    onClick={toggleMobileMenu}
-                  />
+                  <NavbarElement href="/login" label="Login" />
+                  <NavbarElement href="/register" label="Sign Up" />
                 </>
               )}
             </ul>
