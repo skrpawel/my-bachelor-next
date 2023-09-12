@@ -11,6 +11,7 @@ import React, {
 export interface SavedEvent {
   type: string;
   date: Dayjs;
+  id: number;
 }
 
 interface ContextProps {
@@ -22,6 +23,8 @@ interface ContextProps {
   setSelectedDay: Dispatch<SetStateAction<Dayjs>>;
   savedEvents: SavedEvent[];
   setSavedEvents: Dispatch<SetStateAction<SavedEvent[]>>;
+  selectedEventId: string;
+  setSelectedEventId: Dispatch<SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -33,6 +36,8 @@ const GlobalContext = createContext<ContextProps>({
   setSelectedDay: () => {},
   savedEvents: [],
   setSavedEvents: () => {},
+  selectedEventId: "",
+  setSelectedEventId: () => {},
 });
 
 export const GlobalContextProvider = ({ children }: any) => {
@@ -40,6 +45,7 @@ export const GlobalContextProvider = ({ children }: any) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedDay, setSelectedDay] = useState(dayjs());
   const [savedEvents, setSavedEvents] = useState<SavedEvent[]>([]);
+  const [selectedEventId, setSelectedEventId] = useState("");
 
   return (
     <GlobalContext.Provider
@@ -52,6 +58,8 @@ export const GlobalContextProvider = ({ children }: any) => {
         setSelectedDay,
         savedEvents,
         setSavedEvents,
+        selectedEventId,
+        setSelectedEventId,
       }}
     >
       {children}

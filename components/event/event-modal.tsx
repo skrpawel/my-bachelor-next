@@ -1,86 +1,87 @@
 "use client";
 import { useGlobalContext } from "@/app/context/store";
-import React, { ReactNode, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { BiRun } from "react-icons/bi";
 import { GrBike, GrSwim } from "react-icons/gr";
 import { FaCouch } from "react-icons/fa";
 import { ActivityButton } from "./activity-button";
-import { getServerSession } from "next-auth";
-import Link from "next/link";
-import axios from "axios";
-import { error } from "console";
 import { useSession } from "next-auth/react";
+import { postWorkout, deleteWorkout } from "../../apiUtils";
+import InputMask from "react-input-mask";
 
 export default function EventModal() {
   interface CalendarEvent {
     date: number | string;
     type: string;
     duration: string;
+    userId: number;
   }
   const { data: session } = useSession();
   const userEmail = session?.user?.email || null;
 
-  const { showModal, setShowModal, selectedDay, setSavedEvents } =
-    useGlobalContext();
+  const {
+    showModal,
+    setShowModal,
+    selectedDay,
+    setSavedEvents,
+    selectedEventId,
+  } = useGlobalContext();
 
   const [workout, setWorkout] = useState<CalendarEvent>();
   const [workoutLabel, setWorkoutLabel] = useState("");
   const [workoutDuration, setWorkoutDuration] = useState("");
   const [workoutDistance, setWorkoutDistance] = useState("");
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   const chooseActivity = (e: Event, label: string) => {
     e.preventDefault();
     setWorkoutLabel(label);
   };
 
-  const handleSubmit = async (e: Event) => {
+  const resetState = () => {
+    setShowModal(false);
+    setWorkoutLabel("");
+    setWorkoutDuration("");
+    setWorkoutDistance("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const calendarEvent: CalendarEvent = {
       date: selectedDay.valueOf(),
       type: workoutLabel,
       duration: workoutDuration,
+      userId: 5, // Make sure to replace this with a dynamic value in the future
     };
 
     try {
-      const response = await fetch("/api/workout/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...calendarEvent,
-          userId: 5,
-        }),
-      });
-
-      const data = await response.json();
-
+      const data = await postWorkout(calendarEvent);
       setWorkout(data);
-
       setSavedEvents((prev) => [...prev, data]);
-      setShowModal(false);
+      resetState();
     } catch (error) {
-      console.error("Error posting workout:", error);
+      console.error(error);
     }
   };
 
-  const handleDelete = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    workoutId: number
-  ) => {
+  const handleDelete = async (e: Event, workoutId: number) => {
     e.preventDefault();
     try {
-      const response = await axios.delete("/api/workout/remove", {
-        params: {
-          id: workoutId,
-        },
-      });
+      await deleteWorkout(workoutId);
     } catch (error) {
-      console.error("Error deleting workout:", error);
+      console.error(error);
     }
   };
+
+  useEffect(() => {
+    setIsFormComplete(
+      Boolean(workoutLabel) &&
+        Boolean(workoutDuration) &&
+        Boolean(workoutDistance)
+    );
+  }, [workoutLabel, workoutDuration, workoutDistance]);
 
   if (!showModal) return <></>;
 
@@ -95,63 +96,68 @@ export default function EventModal() {
             <button
               className="p-2 border border-prime text-prime"
               onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-                handleDelete(e, 23)
+                handleDelete(e, selectedEventId)
               }
             >
               Delete workout
             </button>
-            <AiOutlineClose
-              onClick={() => setShowModal(false)}
-              className="cursor-pointer"
-            />
+            <AiOutlineClose onClick={resetState} className="cursor-pointer" />
           </div>
         </header>
         <div className="flex flex-col gap-2 items-start md:flex-wrap flex-nowrap">
           Choose activity
           <div className="flex w-full justify-items-center">
-            <ActivityButton
-              icon={<BiRun />}
-              label="Run"
-              onClick={chooseActivity}
-            />
-            <ActivityButton
-              icon={<GrBike />}
-              label="Bike"
-              onClick={chooseActivity}
-            />
-            <ActivityButton
-              icon={<GrSwim />}
-              label="Swim"
-              onClick={chooseActivity}
-            />
-            <ActivityButton
-              icon={<FaCouch />}
-              label="Day off"
-              onClick={chooseActivity}
-            />
+            {["Run", "Bike", "Swim", "Day off"].map((activity, idx) => (
+              <ActivityButton
+                key={`${activity}_${idx}`}
+                icon={activityIcon(activity)}
+                label={activity}
+                onClick={chooseActivity}
+                activeLabel={workoutLabel}
+              />
+            ))}
           </div>
           Planned values
           <div className="flex gap-2">
             <input
-              className="border bg-grey-100 rounded w-20 p-2"
+              className="border  rounded w-20 p-2"
               placeholder="Distance"
               value={workoutDistance}
               onChange={(e) => setWorkoutDistance(e.target.value)}
             ></input>
-            <input
-              className="border bg-grey-100 rounded w-24 p-2"
+            <InputMask
+              className="border rounded w-24 p-2"
+              mask="99:99:99"
               placeholder="hh:mm:ss"
               value={workoutDuration}
               onChange={(e) => setWorkoutDuration(e.target.value)}
-            ></input>
+            >
+              {(props: any) => <input {...props} />}
+            </InputMask>
           </div>
-          <div className="w-full border p-2 bg-grey-100">
-            <button className="w-full" onClick={(e) => handleSubmit(e)}>
-              Submit
-            </button>
-          </div>
+          <button
+            className="w-full border p-2 disabled:bg-gray-200 text-white bg-prime"
+            onClick={(e) => handleSubmit(e)}
+            disabled={!isFormComplete}
+          >
+            Submit
+          </button>
         </div>
       </form>
     </div>
   );
+}
+
+function activityIcon(label: string) {
+  switch (label) {
+    case "Run":
+      return <BiRun />;
+    case "Bike":
+      return <GrBike />;
+    case "Swim":
+      return <GrSwim />;
+    case "Day off":
+    default:
+      return <FaCouch />;
+  }
 }
