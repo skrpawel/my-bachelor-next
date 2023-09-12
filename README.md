@@ -1,1 +1,1 @@
-<h3 align="center">Next.js Prisma PostgreSQL Auth Starter</h3>
+<h3 align="center">Work in progress</h3>
