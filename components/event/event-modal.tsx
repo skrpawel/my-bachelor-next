@@ -16,7 +16,7 @@ export default function EventModal() {
   interface CalendarEvent {
     date: number | string;
     type: string;
-    duration: number;
+    duration: string;
   }
   const { data: session } = useSession();
   const userEmail = session?.user?.email || null;
@@ -25,14 +25,22 @@ export default function EventModal() {
     useGlobalContext();
 
   const [workout, setWorkout] = useState<CalendarEvent>();
+  const [workoutLabel, setWorkoutLabel] = useState("");
+  const [workoutDuration, setWorkoutDuration] = useState("");
+  const [workoutDistance, setWorkoutDistance] = useState("");
 
-  const handleSubmit = async (e: Event, label: string, icon: any) => {
+  const chooseActivity = (e: Event, label: string) => {
     e.preventDefault();
-    console.log(e);
+    setWorkoutLabel(label);
+  };
+
+  const handleSubmit = async (e: Event) => {
+    e.preventDefault();
+
     const calendarEvent: CalendarEvent = {
       date: selectedDay.valueOf(),
-      type: label,
-      duration: 1,
+      type: workoutLabel,
+      duration: workoutDuration,
     };
 
     try {
@@ -43,7 +51,7 @@ export default function EventModal() {
         },
         body: JSON.stringify({
           ...calendarEvent,
-          email: userEmail, // replace with the actual user ID
+          userId: 5,
         }),
       });
 
@@ -104,42 +112,43 @@ export default function EventModal() {
             <ActivityButton
               icon={<BiRun />}
               label="Run"
-              onClick={handleSubmit}
+              onClick={chooseActivity}
             />
             <ActivityButton
               icon={<GrBike />}
               label="Bike"
-              onClick={handleSubmit}
+              onClick={chooseActivity}
             />
             <ActivityButton
               icon={<GrSwim />}
               label="Swim"
-              onClick={handleSubmit}
+              onClick={chooseActivity}
             />
             <ActivityButton
               icon={<FaCouch />}
               label="Day off"
-              onClick={handleSubmit}
+              onClick={chooseActivity}
             />
           </div>
           Planned values
           <div className="flex gap-2">
             <input
-              className="border border-black rounded w-20 p-2"
+              className="border bg-grey-100 rounded w-20 p-2"
               placeholder="Distance"
+              value={workoutDistance}
+              onChange={(e) => setWorkoutDistance(e.target.value)}
             ></input>
             <input
-              className="border border-black rounded w-24 p-2"
+              className="border bg-grey-100 rounded w-24 p-2"
               placeholder="hh:mm:ss"
+              value={workoutDuration}
+              onChange={(e) => setWorkoutDuration(e.target.value)}
             ></input>
           </div>
-          <div className="w-full">
-            <ActivityButton
-              className="w-full"
-              icon={<BiRun />}
-              label="Submit"
-              onClick={handleSubmit}
-            />
+          <div className="w-full border p-2 bg-grey-100">
+            <button className="w-full" onClick={(e) => handleSubmit(e)}>
+              Submit
+            </button>
           </div>
         </div>
       </form>

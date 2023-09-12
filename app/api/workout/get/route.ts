@@ -16,6 +16,8 @@ export async function GET(req: Request) {
         userId: 3,
       },
     });
+
+    console.log(workouts);
     return NextResponse.json(workouts);
   } catch (error) {
     return NextResponse.json(
