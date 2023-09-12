@@ -33,6 +33,8 @@ export default function EventModal() {
   const [workoutDuration, setWorkoutDuration] = useState("");
   const [workoutDistance, setWorkoutDistance] = useState("");
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [rawValue, setRawValue] = useState(""); // e.g. '1', '12345'
+  const [displayValue, setDisplayValue] = useState(""); // e.g. '00:01', '01:23:45'
 
   const chooseActivity = (e: Event, label: string) => {
     e.preventDefault();
@@ -53,7 +55,7 @@ export default function EventModal() {
       date: selectedDay.valueOf(),
       type: workoutLabel,
       duration: workoutDuration,
-      userId: 5, // Make sure to replace this with a dynamic value in the future
+      userId: 3, // Make sure to replace this with a dynamic value in the future
     };
 
     try {
@@ -70,18 +72,31 @@ export default function EventModal() {
     e.preventDefault();
     try {
       await deleteWorkout(workoutId);
+      setSavedEvents((prevEvents) =>
+        prevEvents.filter((event) => event.id !== workoutId)
+      );
+      resetState();
     } catch (error) {
       console.error(error);
     }
   };
 
+  async function showUser() {
+    try {
+      const email = await console.log(userEmail);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
+    showUser();
     setIsFormComplete(
       Boolean(workoutLabel) &&
         Boolean(workoutDuration) &&
         Boolean(workoutDistance)
     );
-  }, [workoutLabel, workoutDuration, workoutDistance]);
+  }, [workoutLabel, workoutDuration, workoutDistance, userEmail]);
 
   if (!showModal) return <></>;
 
@@ -119,12 +134,15 @@ export default function EventModal() {
           </div>
           Planned values
           <div className="flex gap-2">
-            <input
-              className="border  rounded w-20 p-2"
-              placeholder="Distance"
-              value={workoutDistance}
-              onChange={(e) => setWorkoutDistance(e.target.value)}
-            ></input>
+            <div className="flex">
+              <input
+                className="border w-20 p-2"
+                placeholder="Distance"
+                value={workoutDistance}
+                onChange={(e) => setWorkoutDistance(e.target.value)}
+              ></input>
+              <div className="border w-10 p-2">km</div>
+            </div>
             <InputMask
               className="border rounded w-24 p-2"
               mask="99:99:99"

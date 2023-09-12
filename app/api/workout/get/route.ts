@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   try {
     const workouts = await prisma.workout.findMany({
       where: {
-        userId: 5,
+        userId: 3,
       },
     });
 

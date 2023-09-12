@@ -18,7 +18,7 @@ const NavbarElement: React.FC<NavbarElementProps> = ({
       onClick={onClick}
       className="hover:text-prime hover:font-bold text-center"
     >
-      <li className="w-28">{label}</li>
+      <li className="min-w-28">{label}</li>
     </Link>
   );
 };
