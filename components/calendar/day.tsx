@@ -33,7 +33,6 @@ export default function Day({ day }: DayProps) {
     const events = (savedEvents || []).filter(
       (event) => dayjs(event.date).format("DD-MM-YY") === day.format("DD-MM-YY")
     );
-    console.log(events);
     setWorkouts(events);
   }, [savedEvents]);
 

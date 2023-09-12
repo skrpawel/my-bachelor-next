@@ -1,4 +1,5 @@
 "use client";
+
 import { useGlobalContext } from "@/app/context/store";
 import React, { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
@@ -6,7 +7,6 @@ import { BiRun } from "react-icons/bi";
 import { GrBike, GrSwim } from "react-icons/gr";
 import { FaCouch } from "react-icons/fa";
 import { ActivityButton } from "./activity-button";
-import { useSession } from "next-auth/react";
 import { postWorkout, deleteWorkout } from "../../apiUtils";
 import InputMask from "react-input-mask";
 
@@ -17,8 +17,6 @@ export default function EventModal() {
     duration: string;
     userId: number;
   }
-  const { data: session } = useSession();
-  const userEmail = session?.user?.email || null;
 
   const {
     showModal,
@@ -28,24 +26,26 @@ export default function EventModal() {
     selectedEventId,
   } = useGlobalContext();
 
-  const [workout, setWorkout] = useState<CalendarEvent>();
-  const [workoutLabel, setWorkoutLabel] = useState("");
-  const [workoutDuration, setWorkoutDuration] = useState("");
-  const [workoutDistance, setWorkoutDistance] = useState("");
+  const [workout, setWorkout] = useState({
+    label: "",
+    duration: "",
+    distance: "",
+  });
+
   const [isFormComplete, setIsFormComplete] = useState(false);
-  const [rawValue, setRawValue] = useState(""); // e.g. '1', '12345'
-  const [displayValue, setDisplayValue] = useState(""); // e.g. '00:01', '01:23:45'
 
   const chooseActivity = (e: Event, label: string) => {
     e.preventDefault();
-    setWorkoutLabel(label);
+    setWorkout((prev) => ({ ...prev, label: label }));
   };
 
   const resetState = () => {
     setShowModal(false);
-    setWorkoutLabel("");
-    setWorkoutDuration("");
-    setWorkoutDistance("");
+    setWorkout({
+      label: "",
+      duration: "",
+      distance: "",
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,14 +53,13 @@ export default function EventModal() {
 
     const calendarEvent: CalendarEvent = {
       date: selectedDay.valueOf(),
-      type: workoutLabel,
-      duration: workoutDuration,
+      type: workout.label,
+      duration: workout.duration,
       userId: 3, // Make sure to replace this with a dynamic value in the future
     };
 
     try {
       const data = await postWorkout(calendarEvent);
-      setWorkout(data);
       setSavedEvents((prev) => [...prev, data]);
       resetState();
     } catch (error) {
@@ -81,22 +80,13 @@ export default function EventModal() {
     }
   };
 
-  async function showUser() {
-    try {
-      const email = await console.log(userEmail);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   useEffect(() => {
-    showUser();
     setIsFormComplete(
-      Boolean(workoutLabel) &&
-        Boolean(workoutDuration) &&
-        Boolean(workoutDistance)
+      Boolean(workout.label) &&
+        Boolean(workout.distance) &&
+        Boolean(workout.duration)
     );
-  }, [workoutLabel, workoutDuration, workoutDistance, userEmail]);
+  }, [workout]);
 
   if (!showModal) return <></>;
 
@@ -128,7 +118,7 @@ export default function EventModal() {
                 icon={activityIcon(activity)}
                 label={activity}
                 onClick={chooseActivity}
-                activeLabel={workoutLabel}
+                activeLabel={workout.label}
               />
             ))}
           </div>
@@ -138,8 +128,10 @@ export default function EventModal() {
               <input
                 className="border w-20 p-2"
                 placeholder="Distance"
-                value={workoutDistance}
-                onChange={(e) => setWorkoutDistance(e.target.value)}
+                value={workout.distance}
+                onChange={(e) =>
+                  setWorkout((prev) => ({ ...prev, distance: e.target.value }))
+                }
               ></input>
               <div className="border w-10 p-2">km</div>
             </div>
@@ -147,8 +139,10 @@ export default function EventModal() {
               className="border rounded w-24 p-2"
               mask="99:99:99"
               placeholder="hh:mm:ss"
-              value={workoutDuration}
-              onChange={(e) => setWorkoutDuration(e.target.value)}
+              value={workout.duration}
+              onChange={(e) =>
+                setWorkout((prev) => ({ ...prev, duration: e.target.value }))
+              }
             >
               {(props: any) => <input {...props} />}
             </InputMask>
