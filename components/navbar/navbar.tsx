@@ -55,8 +55,12 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <div className=" md:hidden pb-6 text-white">
             <ul className="uppercase mt-2 space-y-2 flex flex-col w-full items-center text-2xl">
-              <NavbarElement href="/" label="Home" />
-              <NavbarElement href="/calendar" label="Calendar" />
+              <NavbarElement href="/" label="Home" onClick={toggleMobileMenu} />
+              <NavbarElement
+                href="/calendar"
+                label="Calendar"
+                onClick={toggleMobileMenu}
+              />
               {session?.user ? (
                 <>
                   <NavbarElement
@@ -64,13 +68,22 @@ const Navbar = () => {
                     label="Sign out"
                     onClick={() => {
                       signOut();
+                      toggleMobileMenu;
                     }}
                   />
                 </>
               ) : (
                 <>
-                  <NavbarElement href="/login" label="Login" />
-                  <NavbarElement href="/register" label="Sign Up" />
+                  <NavbarElement
+                    href="/login"
+                    label="Login"
+                    onClick={toggleMobileMenu}
+                  />
+                  <NavbarElement
+                    href="/register"
+                    label="Sign Up"
+                    onClick={toggleMobileMenu}
+                  />
                 </>
               )}
             </ul>
