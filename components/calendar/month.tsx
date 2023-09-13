@@ -6,7 +6,13 @@ import { useGlobalContext } from "@/app/context/store";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
-export default function Month({ month }: { month: Dayjs[][] }) {
+export default function Month({
+  month,
+  activeFilter,
+}: {
+  month: Dayjs[][];
+  activeFilter: string;
+}) {
   const { setSavedEvents } = useGlobalContext();
 
   const { data: session } = useSession();
@@ -29,7 +35,11 @@ export default function Month({ month }: { month: Dayjs[][] }) {
       {month.map((row, i) => (
         <React.Fragment key={i}>
           {row.map((day, idx) => (
-            <Day key={`${day.format("DD-MM-YY")}${idx}`} day={day} />
+            <Day
+              key={`${day.format("DD-MM-YY")}${idx}`}
+              day={day}
+              activeFilter={activeFilter}
+            />
           ))}
         </React.Fragment>
       ))}

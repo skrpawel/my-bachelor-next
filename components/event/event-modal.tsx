@@ -98,6 +98,12 @@ export default function EventModal() {
     resetState();
   };
 
+  const handleComplete = async (e: React.FormEvent, id: string) => {
+    e.preventDefault();
+
+    resetState();
+  };
+
   const handleDelete = async (e: Event, workoutId: number) => {
     e.preventDefault();
     try {
@@ -199,17 +205,31 @@ export default function EventModal() {
           ) : (
             <></>
           )}
-          <button
-            className="w-full border p-2 disabled:bg-gray-200 text-white bg-prime"
-            onClick={
-              isUpdatingEvent
-                ? (e) => handleUpdate(e, selectedEventId)
-                : (e) => handleSubmit(e)
-            }
-            disabled={!isFormComplete}
-          >
-            {isUpdatingEvent ? "Update" : "Submit"}
-          </button>
+          {isUpdatingEvent ? (
+            <>
+              <button
+                className="w-full border p-2 disabled:bg-gray-200 text-white bg-prime"
+                onClick={(e) => handleUpdate(e, selectedEventId)}
+                disabled={!isFormComplete}
+              >
+                Update
+              </button>
+              <button
+                className="w-full border p-2 disabled:bg-gray-200 text-white bg-green-600"
+                onClick={(e) => handleComplete(e, selectedEventId)}
+              >
+                Mark as complete
+              </button>
+            </>
+          ) : (
+            <button
+              className="w-full border p-2 disabled:bg-gray-200 text-white bg-prime"
+              onClick={(e) => handleSubmit(e)}
+              disabled={!isFormComplete}
+            >
+              Submit
+            </button>
+          )}
         </div>
       </form>
     </div>

@@ -20,7 +20,7 @@ export default function Home() {
             Achieve Your Peak Performance
           </h3>
           <p className="text-xl">
-            Our intuitive design make it easy to set goals and monitor your
+            Our intuitive design makes it easy to set goals and monitor your
             progress. Unleash your true potential with every workout.
           </p>
         </div>

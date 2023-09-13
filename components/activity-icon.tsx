@@ -12,7 +12,8 @@ export function activityIcon(label: string) {
     case "Swim":
       return <GrSwim />;
     case "Day off":
-    default:
       return <FaCouch />;
+    default:
+      return "";
   }
 }

@@ -8,9 +8,10 @@ import { activityIcon } from "../activity-icon";
 
 interface DayProps {
   day: Dayjs;
+  activeFilter: string;
 }
 
-export default function Day({ day }: DayProps) {
+export default function Day({ day, activeFilter }: DayProps) {
   const isCurrentDay = () =>
     day.format("DD-MM-YY") !== dayjs().format("DD-MM-YY");
 
@@ -38,11 +39,16 @@ export default function Day({ day }: DayProps) {
   };
 
   useEffect(() => {
-    const events = (savedEvents || []).filter(
+    let events = (savedEvents || []).filter(
       (event) => dayjs(event.date).format("DD-MM-YY") === day.format("DD-MM-YY")
     );
+
+    if (activeFilter !== "All") {
+      events = events.filter((event) => event.type === activeFilter);
+    }
+
     setWorkouts(events);
-  }, [savedEvents]);
+  }, [savedEvents, activeFilter]);
 
   return (
     <div

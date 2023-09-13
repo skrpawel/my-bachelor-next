@@ -6,9 +6,11 @@ import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { useGlobalContext } from "../context/store";
 import EventModal from "@/components/event/event-modal";
 import { WeekHeader } from "@/components/calendar/week-header";
+import { Filter } from "@/components/filter/filter";
 
 export default function Home() {
   const [currentMonth, setCurrentMonth] = useState(getMonthMatrix());
+  const [activeFilter, setActiveFilter] = useState("All");
   const { monthIndex } = useGlobalContext();
   useEffect(() => {
     setCurrentMonth(getMonthMatrix(monthIndex));
@@ -19,8 +21,9 @@ export default function Home() {
       <div className="h-3/4 bg-white">
         <EventModal />
         <CalendarHeader />
+        <Filter active={activeFilter} setActive={setActiveFilter} />
         <WeekHeader />
-        <Month month={currentMonth} />
+        <Month month={currentMonth} activeFilter={activeFilter} />
       </div>
     </div>
   );
