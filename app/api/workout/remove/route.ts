@@ -2,8 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest) {
-  const request = req;
-  const workoutId = request.nextUrl.searchParams.get("id");
+  const workoutId = req.nextUrl.searchParams.get("id");
 
   if (!workoutId) {
     return NextResponse.json({ error: "No ID provided" }, { status: 400 });

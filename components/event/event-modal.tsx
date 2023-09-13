@@ -7,6 +7,7 @@ import { ActivityButton } from "./activity-button";
 import { postWorkout, deleteWorkout, updateWorkout } from "../../apiUtils";
 import InputMask from "react-input-mask";
 import { activityIcon } from "../activity-icon";
+import { useSession } from "next-auth/react";
 
 export default function EventModal() {
   interface CalendarEvent {
@@ -32,6 +33,7 @@ export default function EventModal() {
     duration: "",
     distance: "",
   });
+  const { data: session } = useSession();
 
   const [isFormComplete, setIsFormComplete] = useState(false);
 
@@ -58,15 +60,14 @@ export default function EventModal() {
       type: workout.label,
       duration: workout.duration,
       distance: workout.distance,
-      userId: 1, // Make sure to replace this with a dynamic value in the future
+      userId: parseInt(session?.user?.id),
     };
 
-    try {
-      const data = await postWorkout(calendarEvent);
+    const data = await postWorkout(calendarEvent);
+
+    if (data) {
       setSavedEvents((prev) => [...prev, data]);
       resetState();
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -78,27 +79,23 @@ export default function EventModal() {
       type: workout.label,
       duration: workout.duration,
       distance: workout.distance,
-      userId: 1, // Make sure to replace this with a dynamic value in the future
+      userId: parseInt(session?.user?.id),
     };
 
-    try {
-      const data = await updateWorkout(id, calendarEvent);
-      setSavedEvents((prev) => {
-        const indexToUpdate = prev.findIndex(
-          (workout) => workout.id === parseInt(id)
-        );
+    const data = await updateWorkout(id, calendarEvent);
+    setSavedEvents((prev) => {
+      const indexToUpdate = prev.findIndex(
+        (workout) => workout.id === parseInt(id)
+      );
 
-        if (indexToUpdate !== -1) {
-          const updatedEvents = [...prev];
-          updatedEvents[indexToUpdate] = data;
-          return updatedEvents;
-        }
-        return prev;
-      });
-      resetState();
-    } catch (error) {
-      console.error(error);
-    }
+      if (indexToUpdate !== -1) {
+        const updatedEvents = [...prev];
+        updatedEvents[indexToUpdate] = data;
+        return updatedEvents;
+      }
+      return prev;
+    });
+    resetState();
   };
 
   const handleDelete = async (e: Event, workoutId: number) => {
@@ -115,7 +112,6 @@ export default function EventModal() {
   };
 
   useEffect(() => {
-    console.log(workout.label);
     if (workout.label === "Day off") return setIsFormComplete(true);
 
     setIsFormComplete(
@@ -134,6 +130,7 @@ export default function EventModal() {
           <h1 className="text-prime text-2xl">
             {selectedDay.format("MMMM D, YYYY	")}
           </h1>
+
           <div className="flex gap-4 items-center">
             {isUpdatingEvent ? (
               <button

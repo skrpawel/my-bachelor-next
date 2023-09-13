@@ -7,9 +7,11 @@ export async function POST(req: NextRequest) {
   // Optional: Validate that the user with userId exists
   const userExists = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: parseInt(userId),
     },
   });
+
+  console.log(userExists);
 
   if (!userExists) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });

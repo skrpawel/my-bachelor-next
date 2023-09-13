@@ -1,11 +1,6 @@
-import React, { FC, ReactElement } from "react";
+import React from "react";
 import Link from "next/link";
-
-interface NavbarElementProps {
-  href: string;
-  label: string;
-  onClick?: () => void;
-}
+import { NavbarElementProps } from "types";
 
 const NavbarElement: React.FC<NavbarElementProps> = ({
   href,

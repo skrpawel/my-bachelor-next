@@ -14,6 +14,7 @@ export const postWorkout = async (workoutData: CalendarEvent) => {
     return response.data;
   } catch (error) {
     console.error("Error posting workout:", error);
+    return "";
   }
 };
 
@@ -27,6 +28,7 @@ export const updateWorkout = async (id: string, workoutData: CalendarEvent) => {
     return response.data;
   } catch (error) {
     console.error("Error posting workout:", error);
+    return "";
   }
 };
 

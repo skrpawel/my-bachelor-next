@@ -6,7 +6,7 @@ import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { useGlobalContext } from "../context/store";
 import EventModal from "@/components/event/event-modal";
 import { WeekHeader } from "@/components/calendar/week-header";
-import { SessionProvider } from "next-auth/react";
+
 export default function Home() {
   const [currentMonth, setCurrentMonth] = useState(getMonthMatrix());
   const { monthIndex } = useGlobalContext();
@@ -17,9 +17,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen justify-center mx-6">
       <div className="h-3/4 bg-white">
-        <SessionProvider>
-          <EventModal />
-        </SessionProvider>
+        <EventModal />
         <CalendarHeader />
         <WeekHeader />
         <Month month={currentMonth} />

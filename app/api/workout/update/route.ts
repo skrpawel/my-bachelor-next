@@ -6,12 +6,6 @@ export async function PUT(req: NextRequest) {
 
   const workoutId = parseInt(req.nextUrl.searchParams.get("id"));
 
-  const workoutExists = await prisma.workout.findUnique({
-    where: {
-      id: workoutId,
-    },
-  });
-
   try {
     const updatedWorkout = await prisma.workout.update({
       where: {

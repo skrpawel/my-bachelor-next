@@ -2,18 +2,12 @@ import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const userId = req;
-
-  // Grab the userId from the query parameters
-
-  if (!userId) {
-    return NextResponse.json({ error: "UserId not provided" }, { status: 400 });
-  }
+  const workoutId = parseInt(req.nextUrl.searchParams.get("id"));
 
   try {
     const workouts = await prisma.workout.findMany({
       where: {
-        userId: 1,
+        userId: workoutId,
       },
     });
 
