@@ -3,12 +3,10 @@
 import { useGlobalContext } from "@/app/context/store";
 import React, { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { BiRun } from "react-icons/bi";
-import { GrBike, GrSwim } from "react-icons/gr";
-import { FaCouch } from "react-icons/fa";
 import { ActivityButton } from "./activity-button";
-import { postWorkout, deleteWorkout } from "../../apiUtils";
+import { postWorkout, deleteWorkout, updateWorkout } from "../../apiUtils";
 import InputMask from "react-input-mask";
+import { activityIcon } from "../activity-icon";
 
 export default function EventModal() {
   interface CalendarEvent {
@@ -25,6 +23,8 @@ export default function EventModal() {
     selectedDay,
     setSavedEvents,
     selectedEventId,
+    setIsUpdatingEvent,
+    isUpdatingEvent,
   } = useGlobalContext();
 
   const [workout, setWorkout] = useState({
@@ -42,6 +42,7 @@ export default function EventModal() {
 
   const resetState = () => {
     setShowModal(false);
+    setIsUpdatingEvent(false);
     setWorkout({
       label: "",
       duration: "",
@@ -63,6 +64,37 @@ export default function EventModal() {
     try {
       const data = await postWorkout(calendarEvent);
       setSavedEvents((prev) => [...prev, data]);
+      resetState();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdate = async (e: React.FormEvent, id: string) => {
+    e.preventDefault();
+
+    const calendarEvent: CalendarEvent = {
+      date: selectedDay.valueOf(),
+      type: workout.label,
+      duration: workout.duration,
+      distance: workout.distance,
+      userId: 1, // Make sure to replace this with a dynamic value in the future
+    };
+
+    try {
+      const data = await updateWorkout(id, calendarEvent);
+      setSavedEvents((prev) => {
+        const indexToUpdate = prev.findIndex(
+          (workout) => workout.id === parseInt(id)
+        );
+
+        if (indexToUpdate !== -1) {
+          const updatedEvents = [...prev];
+          updatedEvents[indexToUpdate] = data;
+          return updatedEvents;
+        }
+        return prev;
+      });
       resetState();
     } catch (error) {
       console.error(error);
@@ -103,12 +135,17 @@ export default function EventModal() {
             {selectedDay.format("MMMM D, YYYY	")}
           </h1>
           <div className="flex gap-4 items-center">
-            <button
-              className="p-2 border border-prime text-prime"
-              onClick={(e: any) => handleDelete(e, parseInt(selectedEventId))}
-            >
-              Delete workout
-            </button>
+            {isUpdatingEvent ? (
+              <button
+                className="p-2 border border-prime text-prime"
+                onClick={(e: any) => handleDelete(e, parseInt(selectedEventId))}
+              >
+                Delete workout
+              </button>
+            ) : (
+              <></>
+            )}
+
             <AiOutlineClose onClick={resetState} className="cursor-pointer" />
           </div>
         </header>
@@ -167,27 +204,17 @@ export default function EventModal() {
           )}
           <button
             className="w-full border p-2 disabled:bg-gray-200 text-white bg-prime"
-            onClick={(e) => handleSubmit(e)}
+            onClick={
+              isUpdatingEvent
+                ? (e) => handleUpdate(e, selectedEventId)
+                : (e) => handleSubmit(e)
+            }
             disabled={!isFormComplete}
           >
-            Submit
+            {isUpdatingEvent ? "Update" : "Submit"}
           </button>
         </div>
       </form>
     </div>
   );
-}
-
-function activityIcon(label: string) {
-  switch (label) {
-    case "Run":
-      return <BiRun />;
-    case "Bike":
-      return <GrBike />;
-    case "Swim":
-      return <GrSwim />;
-    case "Day off":
-    default:
-      return <FaCouch />;
-  }
 }

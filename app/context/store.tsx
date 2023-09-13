@@ -11,6 +11,8 @@ import React, {
 export interface SavedEvent {
   type: string;
   date: Dayjs;
+  distance: string;
+  duration: string;
   id: number;
 }
 
@@ -25,6 +27,8 @@ interface ContextProps {
   setSavedEvents: Dispatch<SetStateAction<SavedEvent[]>>;
   selectedEventId: string;
   setSelectedEventId: Dispatch<SetStateAction<string>>;
+  isUpdatingEvent: boolean;
+  setIsUpdatingEvent: Dispatch<SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -38,14 +42,17 @@ const GlobalContext = createContext<ContextProps>({
   setSavedEvents: () => {},
   selectedEventId: "",
   setSelectedEventId: () => {},
+  isUpdatingEvent: false,
+  setIsUpdatingEvent: () => {},
 });
 
 export const GlobalContextProvider = ({ children }: any) => {
-  const [monthIndex, setMonthIndex] = useState(dayjs().month());
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(dayjs());
+  const [monthIndex, setMonthIndex] = useState<number>(dayjs().month());
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedDay, setSelectedDay] = useState<Dayjs>(dayjs());
   const [savedEvents, setSavedEvents] = useState<SavedEvent[]>([]);
-  const [selectedEventId, setSelectedEventId] = useState("");
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [isUpdatingEvent, setIsUpdatingEvent] = useState<boolean>(false);
 
   return (
     <GlobalContext.Provider
@@ -60,6 +67,8 @@ export const GlobalContextProvider = ({ children }: any) => {
         setSavedEvents,
         selectedEventId,
         setSelectedEventId,
+        isUpdatingEvent,
+        setIsUpdatingEvent,
       }}
     >
       {children}

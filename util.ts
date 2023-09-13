@@ -1,4 +1,8 @@
+import React from "react";
 import dayjs, { Dayjs } from "dayjs";
+import { BiRun } from "react-icons/bi";
+import { GrBike, GrSwim } from "react-icons/gr";
+import { FaCouch } from "react-icons/fa";
 
 export function getMonthMatrix(month: number = dayjs().month()): Dayjs[][] {
   month = Math.floor(month);
