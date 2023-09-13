@@ -4,6 +4,7 @@ interface CalendarEvent {
   date: number | string;
   type: string;
   duration: string;
+  distance: string;
   userId: number;
 }
 

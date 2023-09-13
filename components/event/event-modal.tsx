@@ -15,6 +15,7 @@ export default function EventModal() {
     date: number | string;
     type: string;
     duration: string;
+    distance: string;
     userId: number;
   }
 
@@ -55,7 +56,8 @@ export default function EventModal() {
       date: selectedDay.valueOf(),
       type: workout.label,
       duration: workout.duration,
-      userId: 3, // Make sure to replace this with a dynamic value in the future
+      distance: workout.distance,
+      userId: 1, // Make sure to replace this with a dynamic value in the future
     };
 
     try {
@@ -81,6 +83,9 @@ export default function EventModal() {
   };
 
   useEffect(() => {
+    console.log(workout.label);
+    if (workout.label === "Day off") return setIsFormComplete(true);
+
     setIsFormComplete(
       Boolean(workout.label) &&
         Boolean(workout.distance) &&
@@ -120,34 +125,46 @@ export default function EventModal() {
               />
             ))}
           </div>
-          <div className="grid grid-cols-2 w-full">
-            <h1>Planned values:</h1>
-            <h1>Pace:</h1>
-          </div>
-          <div className="flex gap-2">
-            <div className="flex">
-              <input
-                className="border w-20 p-2"
-                placeholder="Distance"
-                value={workout.distance}
-                onChange={(e) =>
-                  setWorkout((prev) => ({ ...prev, distance: e.target.value }))
-                }
-              ></input>
-              <div className="border w-10 p-2">km</div>
-            </div>
-            <InputMask
-              className="border rounded w-24 p-2"
-              mask="99:99:99"
-              placeholder="hh:mm:ss"
-              value={workout.duration}
-              onChange={(e) =>
-                setWorkout((prev) => ({ ...prev, duration: e.target.value }))
-              }
-            >
-              {(props: any) => <input {...props} />}
-            </InputMask>
-          </div>
+          {workout.label !== "Day off" ? (
+            <>
+              <div className="grid grid-cols-2 w-full">
+                <h1>Planned values:</h1>
+                <h1>Pace:</h1>
+              </div>
+              <div className="flex gap-2">
+                <div className="flex">
+                  <input
+                    className="border w-20 p-2"
+                    placeholder="Distance"
+                    value={workout.distance}
+                    onChange={(e) =>
+                      setWorkout((prev) => ({
+                        ...prev,
+                        distance: e.target.value,
+                      }))
+                    }
+                  ></input>
+                  <div className="border w-10 p-2">km</div>
+                </div>
+                <InputMask
+                  className="border rounded w-24 p-2"
+                  mask="99:99:99"
+                  placeholder="hh:mm:ss"
+                  value={workout.duration}
+                  onChange={(e) =>
+                    setWorkout((prev) => ({
+                      ...prev,
+                      duration: e.target.value,
+                    }))
+                  }
+                >
+                  {(props: any) => <input {...props} />}
+                </InputMask>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
           <button
             className="w-full border p-2 disabled:bg-gray-200 text-white bg-prime"
             onClick={(e) => handleSubmit(e)}
