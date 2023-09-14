@@ -214,12 +214,12 @@ export default function EventModal() {
               >
                 Update
               </button>
-              <button
+              {/* <button
                 className="w-full border p-2 disabled:bg-gray-200 text-white bg-green-600"
                 onClick={(e) => handleComplete(e, selectedEventId)}
               >
                 Mark as complete
-              </button>
+              </button> */}
             </>
           ) : (
             <button
