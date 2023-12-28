@@ -2,7 +2,8 @@ import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { type, distance, date, duration, userId } = await req.json();
+  const { title, type, distance, date, duration, userId, note } =
+    await req.json();
 
   // Optional: Validate that the user with userId exists
   const userExists = await prisma.user.findUnique({
@@ -11,8 +12,6 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  console.log(userExists);
-
   if (!userExists) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
@@ -20,11 +19,14 @@ export async function POST(req: NextRequest) {
   try {
     const workout = await prisma.workout.create({
       data: {
+        title,
         type,
         duration,
         distance,
         date: new Date(date),
-        userId: userId, // associate the workout with the user
+        userId, // associate the workout with the user
+        isComplete: false,
+        note,
       },
     });
     return NextResponse.json(workout);

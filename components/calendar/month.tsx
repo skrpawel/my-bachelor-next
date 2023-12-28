@@ -31,7 +31,7 @@ export default function Month({
   }, []);
 
   return (
-    <div className=" grid grid-cols-7 grid-rows-5  bg-white">
+    <div className="grid grid-cols-8 bg-white">
       {month.map((row, i) => (
         <React.Fragment key={i}>
           {row.map((day, idx) => (
@@ -41,6 +41,11 @@ export default function Month({
               activeFilter={activeFilter}
             />
           ))}
+          <div className="flex flex-col border border-gray-200 px-2 py-4">
+            <h3>Total duration:</h3>
+            <br></br>
+            <h3>Total distance:</h3>
+          </div>
         </React.Fragment>
       ))}
     </div>

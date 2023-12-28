@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -18,11 +17,14 @@ model User {
 }
 
 model Workout {
-  id       Int      @id @default(autoincrement())
-  type     String
-  duration String
-  distance String   @default("23")
-  date     DateTime
-  userId   Int
-  user     User     @relation(fields: [userId], references: [id])
+  id         Int      @id @default(autoincrement())
+  title      String
+  type       String
+  duration   String
+  distance   String   @default("23")
+  date       DateTime
+  userId     Int
+  isComplete Boolean
+  note       String
+  user       User     @relation(fields: [userId], references: [id])
 }

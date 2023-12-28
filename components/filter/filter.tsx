@@ -7,7 +7,15 @@ interface FilterProps {
 }
 
 export const Filter: React.FC<FilterProps> = ({ active, setActive }) => {
-  const week: string[] = ["All", "Run", "Bike", "Swim", "Day off"];
+  const week: string[] = [
+    "All",
+    "Run",
+    "Bike",
+    "Swim",
+    "Day off",
+    "Strength",
+    "Other",
+  ];
 
   function setFilter(e: React.MouseEvent, label: string) {
     e.preventDefault();
@@ -15,7 +23,7 @@ export const Filter: React.FC<FilterProps> = ({ active, setActive }) => {
   }
 
   return (
-    <div className="grid grid-cols-5 grid-rows-1 bg-white self-center mb-4">
+    <div className="grid grid-cols-7 grid-rows-1 bg-white self-center mb-4">
       {week.map((activity, idx) => (
         <button
           key={`${activity}_button_${idx}`}
