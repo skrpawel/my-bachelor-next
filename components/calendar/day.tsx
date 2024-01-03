@@ -15,6 +15,8 @@ export default function Day({ day, activeFilter }: DayProps) {
   const isCurrentDay = () =>
     day.format("DD-MM-YY") !== dayjs().format("DD-MM-YY");
 
+  const isPast = () => day.format("DD-MM-YY") < dayjs().format("DD-MM-YY");
+
   const {
     setShowModal,
     setSelectedDay,
@@ -63,28 +65,45 @@ export default function Day({ day, activeFilter }: DayProps) {
       >
         <p className="text-sm text-center">{day.format("DD")}</p>
       </div>
-      <div className=" w-full h-12 my-2">
+      <div className=" w-full min-h-12 my-2">
         {workouts.map((workout, i) => (
           <div
             key={`${workout.type}_${i}`}
             className={`${
               isCurrentDay() ? "border-gray-200" : "border-prime"
-            } border grid grid-rows-2 grid-flow-col hover:cursor-pointer w-full py-2 relative text-sm place-items-center`}
+            } border grid ${
+              workout.title ? "grid-rows-3" : "grid-rows-2"
+            } grid-flow-col my-2 hover:cursor-pointer w-full py-2 relative text-sm place-items-center ${
+              workout.isComplete
+                ? "bg-green-500"
+                : isPast()
+                ? "bg-red-500"
+                : "bg-white"
+            }`}
             onClick={() => updateDayClick(workout.id.toString())}
           >
-            {workout.type !== "Day off" ? (
-              <>
-                <div className="row-span-2 text-lg">
-                  {activityIcon(workout.type)}
-                </div>
-                <div className="col-span-1">{workout.distance} km</div>
-                <div className="row-span-1 col-span-1">{workout.duration}</div>
-              </>
+            {workout.title ? (
+              <div className="row-span-1 col-span-2 w-full ">
+                <h2 className="mx-4 font-bold border-b">{workout.title}</h2>
+              </div>
             ) : (
+              ""
+            )}
+            <>
               <div className="row-span-2 text-lg">
                 {activityIcon(workout.type)}
               </div>
-            )}
+              {workout.distance ? (
+                <div className="col-span-1">{workout.distance} km</div>
+              ) : (
+                <>&nbsp;</>
+              )}
+              {workout.duration ? (
+                <div className="row-span-1 col-span-1">{workout.duration}</div>
+              ) : (
+                <>&nbsp;</>
+              )}
+            </>
           </div>
         ))}
         {isShown ? (

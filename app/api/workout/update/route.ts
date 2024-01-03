@@ -2,7 +2,8 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
-  const { type, distance, date, duration, userId } = await req.json();
+  const { type, distance, date, duration, userId, isComplete, note, title } =
+    await req.json();
 
   const workoutId = parseInt(req.nextUrl.searchParams.get("id"));
 
@@ -12,11 +13,14 @@ export async function PUT(req: NextRequest) {
         id: workoutId,
       },
       data: {
+        title,
         type,
         duration,
         distance,
         date: new Date(date),
         userId: userId,
+        isComplete: isComplete,
+        note,
       },
     });
     return NextResponse.json(updatedWorkout);

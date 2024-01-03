@@ -9,11 +9,14 @@ import React, {
 } from "react";
 
 export interface SavedEvent {
+  title: string;
+  isComplete: boolean;
   type: string;
   date: Dayjs;
   distance: string;
   duration: string;
   id: number;
+  note: string;
 }
 
 interface ContextProps {

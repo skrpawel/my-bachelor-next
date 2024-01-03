@@ -11,11 +11,14 @@ import { useSession } from "next-auth/react";
 
 export default function EventModal() {
   interface CalendarEvent {
+    title: string;
     date: number | string;
     type: string;
     duration: string;
     distance: string;
     userId: number;
+    isComplete: boolean;
+    note: string;
   }
 
   const {
@@ -23,16 +26,21 @@ export default function EventModal() {
     setShowModal,
     selectedDay,
     setSavedEvents,
+    savedEvents,
     selectedEventId,
+    setSelectedEventId,
     setIsUpdatingEvent,
     isUpdatingEvent,
   } = useGlobalContext();
 
   const [workout, setWorkout] = useState({
+    title: "",
     label: "",
     duration: "",
     distance: "",
+    note: "",
   });
+
   const { data: session } = useSession();
 
   const [isFormComplete, setIsFormComplete] = useState(false);
@@ -46,21 +54,60 @@ export default function EventModal() {
     setShowModal(false);
     setIsUpdatingEvent(false);
     setWorkout({
+      title: "",
       label: "",
       duration: "",
       distance: "",
+      note: "",
     });
+    setSelectedEventId("");
+  };
+
+  const calculatePace = (distance: string, duration: string) => {
+    const time = duration.split(":");
+    const hours = parseInt(time[0]);
+    const minutes = parseInt(time[1]);
+    const seconds = parseInt(time[2]);
+    let sum: number = 0;
+
+    if (hours) sum = hours * 60;
+
+    if (minutes) sum += minutes;
+
+    if (seconds) sum += seconds / 60;
+
+    const resultWithoutFormatting = sum / parseFloat(distance);
+
+    const resultMinutes: number = Math.round(resultWithoutFormatting);
+
+    const resultArr: Array<string> = resultWithoutFormatting
+      .toString()
+      .split(".");
+
+    const resultSeconds = parseFloat("0." + parseInt(resultArr[1]));
+
+    let formattedResults;
+
+    if (resultSeconds * 100 < 10)
+      return (formattedResults =
+        resultMinutes + ":0" + parseInt(resultSeconds * 60));
+
+    formattedResults = resultMinutes + ":" + parseInt(resultSeconds * 60);
+
+    return formattedResults;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const calendarEvent: CalendarEvent = {
+      title: workout.title,
       date: selectedDay.valueOf(),
       type: workout.label,
       duration: workout.duration,
       distance: workout.distance,
       userId: parseInt(session?.user?.id),
+      note: workout.note,
     };
 
     const data = await postWorkout(calendarEvent);
@@ -71,15 +118,22 @@ export default function EventModal() {
     }
   };
 
-  const handleUpdate = async (e: React.FormEvent, id: string) => {
+  const handleUpdate = async (
+    e: React.FormEvent,
+    id: string,
+    isComplete: boolean = false
+  ) => {
     e.preventDefault();
 
     const calendarEvent: CalendarEvent = {
+      title: workout.title,
       date: selectedDay.valueOf(),
       type: workout.label,
       duration: workout.duration,
       distance: workout.distance,
       userId: parseInt(session?.user?.id),
+      isComplete: isComplete,
+      note: workout.note,
     };
 
     const data = await updateWorkout(id, calendarEvent);
@@ -95,12 +149,6 @@ export default function EventModal() {
       }
       return prev;
     });
-    resetState();
-  };
-
-  const handleComplete = async (e: React.FormEvent, id: string) => {
-    e.preventDefault();
-
     resetState();
   };
 
@@ -121,11 +169,28 @@ export default function EventModal() {
     if (workout.label === "Day off") return setIsFormComplete(true);
 
     setIsFormComplete(
-      Boolean(workout.label) &&
-        Boolean(workout.distance) &&
-        Boolean(workout.duration)
+      Boolean(workout.label) ||
+        Boolean(workout.distance) ||
+        Boolean(workout.duration) ||
+        Boolean(workout.note)
     );
   }, [workout]);
+
+  useEffect(() => {
+    if (selectedEventId) {
+      const workout = savedEvents.filter(
+        (val) => val.id == parseInt(selectedEventId)
+      );
+
+      setWorkout({
+        title: workout[0].title,
+        label: workout[0].type,
+        duration: workout[0].duration,
+        distance: workout[0].distance,
+        note: workout[0].note,
+      });
+    }
+  }, [selectedEventId, showModal]);
 
   if (!showModal) return <></>;
 
@@ -136,7 +201,6 @@ export default function EventModal() {
           <h1 className="text-prime text-2xl">
             {selectedDay.format("MMMM D, YYYY	")}
           </h1>
-
           <div className="flex gap-4 items-center">
             {isUpdatingEvent ? (
               <button
@@ -153,53 +217,95 @@ export default function EventModal() {
           </div>
         </header>
         <div className="flex flex-col gap-2 items-start md:flex-wrap flex-nowrap">
+          <div>Title</div>
+          <input
+            className="border p-2 w-full"
+            placeholder="Untitled workout"
+            value={workout.title}
+            onChange={(e) =>
+              setWorkout((prev) => ({
+                ...prev,
+                title: e.target.value,
+              }))
+            }
+          ></input>
           Choose activity
           <div className="flex w-full justify-items-center">
-            {["Run", "Bike", "Swim", "Day off"].map((activity, idx) => (
-              <ActivityButton
-                key={`${activity}_${idx}`}
-                icon={activityIcon(activity)}
-                label={activity}
-                onClick={chooseActivity}
-                activeLabel={workout.label}
-              />
-            ))}
+            {["Run", "Bike", "Swim", "Day off", "Strength", "Other"].map(
+              (activity, idx) => (
+                <ActivityButton
+                  key={`${activity}_${idx}`}
+                  icon={activityIcon(activity)}
+                  label={activity}
+                  onClick={chooseActivity}
+                  activeLabel={workout.label}
+                />
+              )
+            )}
           </div>
           {workout.label !== "Day off" ? (
             <>
-              <div className="grid grid-cols-2 w-full">
-                <h1>Planned values:</h1>
-                <h1>Pace:</h1>
-              </div>
-              <div className="flex gap-2">
-                <div className="flex">
-                  <input
-                    className="border w-20 p-2"
-                    placeholder="Distance"
-                    value={workout.distance}
-                    onChange={(e) =>
-                      setWorkout((prev) => ({
-                        ...prev,
-                        distance: e.target.value,
-                      }))
-                    }
-                  ></input>
-                  <div className="border w-10 p-2">km</div>
+              {workout.label !== "Strength" ? (
+                <div className="grid grid-cols-2 w-full">
+                  <div>
+                    <h1>Planned values:</h1>
+                    <div className="flex">
+                      <input
+                        className="border w-24 p-2"
+                        placeholder="Distance"
+                        value={workout.distance}
+                        onChange={(e) =>
+                          setWorkout((prev) => ({
+                            ...prev,
+                            distance: e.target.value,
+                          }))
+                        }
+                      ></input>
+                      <div className="border w-10 p-2">km</div>
+                      <InputMask
+                        className="border rounded w-24 p-2"
+                        mask="99:99:99"
+                        placeholder="hh:mm:ss"
+                        value={workout.duration}
+                        onChange={(e) =>
+                          setWorkout((prev) => ({
+                            ...prev,
+                            duration: e.target.value,
+                          }))
+                        }
+                      >
+                        {(props: any) => <input {...props} />}
+                      </InputMask>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h1>Pace:</h1>
+                    <div className="flex justify-center items-center p-2 text-green-600 font-bold	">
+                      {workout.distance && workout.duration
+                        ? `${calculatePace(
+                            workout.distance,
+                            workout.duration
+                          )} min/km`
+                        : ""}
+                    </div>
+                  </div>
                 </div>
-                <InputMask
-                  className="border rounded w-24 p-2"
-                  mask="99:99:99"
-                  placeholder="hh:mm:ss"
-                  value={workout.duration}
+              ) : (
+                ""
+              )}
+              <div className="w-full">
+                <h1>Notes:</h1>
+                <textarea
+                  className="border w-full p-2 text-sm"
+                  value={workout.note}
                   onChange={(e) =>
                     setWorkout((prev) => ({
                       ...prev,
-                      duration: e.target.value,
+                      note: e.target.value,
                     }))
                   }
-                >
-                  {(props: any) => <input {...props} />}
-                </InputMask>
+                ></textarea>
               </div>
             </>
           ) : (
@@ -214,12 +320,12 @@ export default function EventModal() {
               >
                 Update
               </button>
-              {/* <button
+              <button
                 className="w-full border p-2 disabled:bg-gray-200 text-white bg-green-600"
-                onClick={(e) => handleComplete(e, selectedEventId)}
+                onClick={(e) => handleUpdate(e, selectedEventId, true)}
               >
                 Mark as complete
-              </button> */}
+              </button>
             </>
           ) : (
             <button

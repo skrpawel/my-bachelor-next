@@ -12,13 +12,17 @@ const week: Day[] = [
   { label: "Thursday" },
   { label: "Friday" },
   { label: "Saturday" },
+  { label: "Summary" },
 ];
 
 export const WeekHeader: React.FC = () => {
   return (
-    <div className="flex-1 grid grid-cols-7 grid-rows-1 bg-white">
+    <div className="grid grid-cols-8 grid-rows-1 bg-white">
       {week.map((day, i) => (
-        <div key={`Day_${i}`}className="border border-gray-200 flex flex-col items-center justify-between py-4">
+        <div
+          key={`Day_${i}`}
+          className="border border-gray-200 flex flex-col items-center justify-between py-4"
+        >
           {day.label}
         </div>
       ))}

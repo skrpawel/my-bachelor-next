@@ -17,8 +17,8 @@ export default function Home() {
   }, [monthIndex]);
 
   return (
-    <div className="flex flex-col h-screen justify-center mx-6">
-      <div className="h-3/4 bg-white">
+    <div className="mx-6">
+      <div className=" bg-white py-20">
         <EventModal />
         <CalendarHeader />
         <Filter active={activeFilter} setActive={setActiveFilter} />
