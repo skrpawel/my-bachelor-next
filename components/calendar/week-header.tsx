@@ -5,13 +5,13 @@ interface Day {
 }
 
 const week: Day[] = [
-  { label: "Sunday" },
   { label: "Monday" },
   { label: "Tuesday" },
   { label: "Wednesday" },
   { label: "Thursday" },
   { label: "Friday" },
   { label: "Saturday" },
+  { label: "Sunday" },
   { label: "Summary" },
 ];
 
