@@ -2,8 +2,17 @@ import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { title, type, distance, date, duration, userId, note } =
-    await req.json();
+  const {
+    title,
+    type,
+    distance,
+    date,
+    duration,
+    userId,
+    note,
+    effort,
+    postNote,
+  } = await req.json();
 
   // Optional: Validate that the user with userId exists
   const userExists = await prisma.user.findUnique({
@@ -27,6 +36,8 @@ export async function POST(req: NextRequest) {
         userId, // associate the workout with the user
         isComplete: false,
         note,
+        effort,
+        postNote,
       },
     });
     return NextResponse.json(workout);

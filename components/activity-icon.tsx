@@ -4,6 +4,14 @@ import { GrBike, GrSwim } from "react-icons/gr";
 import { FaCouch } from "react-icons/fa";
 import { IoBarbellSharp } from "react-icons/io5";
 
+import {
+  FaRegFaceDizzy,
+  FaRegFaceFrown,
+  FaRegFaceLaughBeam,
+  FaRegFaceGrinWide,
+  FaRegFaceSmile,
+} from "react-icons/fa6";
+
 export function activityIcon(label: string) {
   switch (label) {
     case "Run":
@@ -20,5 +28,22 @@ export function activityIcon(label: string) {
       return <BiDotsHorizontalRounded />;
     default:
       return "";
+  }
+}
+
+export function effortIcon(label: number) {
+  switch (label) {
+    case 0:
+      return <FaRegFaceDizzy />;
+    case 1:
+      return <FaRegFaceFrown />;
+    case 2:
+      return <FaRegFaceSmile />;
+    case 3:
+      return <FaRegFaceGrinWide />;
+    case 4:
+      return <FaRegFaceLaughBeam />;
+    default:
+      return undefined;
   }
 }

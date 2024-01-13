@@ -6,7 +6,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { ActivityButton } from "./activity-button";
 import { postWorkout, deleteWorkout, updateWorkout } from "../../apiUtils";
 import InputMask from "react-input-mask";
-import { activityIcon } from "../activity-icon";
+import { activityIcon, effortIcon } from "../activity-icon";
 import { useSession } from "next-auth/react";
 
 export default function EventModal() {
@@ -19,6 +19,8 @@ export default function EventModal() {
     userId: number;
     isComplete: boolean;
     note: string;
+    effort: string;
+    postNote: string;
   }
 
   const {
@@ -39,15 +41,21 @@ export default function EventModal() {
     duration: "",
     distance: "",
     note: "",
+    postNote: "",
+    effort: "",
   });
 
   const { data: session } = useSession();
 
   const [isFormComplete, setIsFormComplete] = useState(false);
 
-  const chooseActivity = (e: Event, label: string) => {
+  const chooseInput = (
+    e: Event,
+    label: string,
+    property: "label" | "effort"
+  ) => {
     e.preventDefault();
-    setWorkout((prev) => ({ ...prev, label: label }));
+    setWorkout((prev) => ({ ...prev, [property]: label }));
   };
 
   const resetState = () => {
@@ -59,6 +67,8 @@ export default function EventModal() {
       duration: "",
       distance: "",
       note: "",
+      postNote: "",
+      effort: "",
     });
     setSelectedEventId("");
   };
@@ -108,6 +118,9 @@ export default function EventModal() {
       distance: workout.distance,
       userId: parseInt(session?.user?.id),
       note: workout.note,
+      effort: workout.effort,
+      isComplete: false,
+      postNote: workout.postNote,
     };
 
     const data = await postWorkout(calendarEvent);
@@ -134,6 +147,8 @@ export default function EventModal() {
       userId: parseInt(session?.user?.id),
       isComplete: isComplete,
       note: workout.note,
+      effort: workout.effort,
+      postNote: workout.postNote,
     };
 
     const data = await updateWorkout(id, calendarEvent);
@@ -188,6 +203,8 @@ export default function EventModal() {
         duration: workout[0].duration,
         distance: workout[0].distance,
         note: workout[0].note,
+        effort: workout[0].effort,
+        postNote: workout[0].postNote,
       });
     }
   }, [selectedEventId, showModal]);
@@ -230,15 +247,29 @@ export default function EventModal() {
             }
           ></input>
           Choose activity
-          <div className="flex w-full justify-items-center">
+          <div className="flex w-full justify-items-center justify-center 	">
             {["Run", "Bike", "Swim", "Day off", "Strength", "Other"].map(
               (activity, idx) => (
                 <ActivityButton
                   key={`${activity}_${idx}`}
                   icon={activityIcon(activity)}
                   label={activity}
-                  onClick={chooseActivity}
+                  onClick={(e) => chooseInput(e, activity, "label")}
                   activeLabel={workout.label}
+                />
+              )
+            )}
+          </div>
+          How did you feel:
+          <div className="flex w-full justify-items-center justify-center">
+            {Array.from({ length: 5 }, (__value, index) => index).map(
+              (number, idx) => (
+                <ActivityButton
+                  key={`${number}_${idx}`}
+                  onClick={(e) => chooseInput(e, number.toString(), "effort")}
+                  activeLabel={workout.effort}
+                  icon={effortIcon(number)}
+                  label={`${number}`}
                 />
               )
             )}

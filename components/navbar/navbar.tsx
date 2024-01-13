@@ -28,6 +28,7 @@ const Navbar = () => {
           <ul className="hidden md:flex md:justify-end uppercase">
             <NavbarElement href="/" label="Home" onClick={() => {}} />
             <NavbarElement href="/calendar" label="Calendar" />
+            <NavbarElement href="/notes" label="Notes" />
             {session?.user ? (
               <>
                 <NavbarElement

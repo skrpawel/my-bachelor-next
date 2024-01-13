@@ -26,5 +26,7 @@ model Workout {
   userId     Int
   isComplete Boolean
   note       String
+  effort     String
+  postNote   String
   user       User     @relation(fields: [userId], references: [id])
 }

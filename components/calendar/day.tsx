@@ -9,6 +9,8 @@ import { activityIcon } from "../activity-icon";
 interface DayProps {
   day: Dayjs;
   activeFilter: string;
+  firstDay: boolean;
+  lastDay: boolean;
 }
 
 export default function Day({ day, activeFilter }: DayProps) {

@@ -9,7 +9,7 @@ export const ActivityButton = ({
 }: ActivityButtonProps) => {
   return (
     <button
-      className={`flex border px-4 py-2 rounded items-center gap-2 hover:bg-prime w-32 ${
+      className={`flex border px-4 py-2 rounded items-center gap-2 hover:bg-prime w-full ${
         activeLabel === label ? "bg-prime" : ""
       }`}
       onClick={(event: any) => onClick(event, label)}
