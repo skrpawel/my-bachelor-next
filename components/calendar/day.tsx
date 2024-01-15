@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import dayjs, { type Dayjs } from "dayjs";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useGlobalContext } from "@/app/context/store";
-import { SavedEvent } from "@/app/context/store";
+import { SavedEvent, useGlobalContext } from "@/app/context/store";
 import { activityIcon } from "../activity-icon";
 
 interface DayProps {

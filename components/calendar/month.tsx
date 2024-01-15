@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Day from "./day";
 import dayjs, { Dayjs } from "dayjs";
 import { useGlobalContext } from "@/app/context/store";

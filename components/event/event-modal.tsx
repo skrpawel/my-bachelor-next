@@ -277,51 +277,98 @@ export default function EventModal() {
           {workout.label !== "Day off" ? (
             <>
               {workout.label !== "Strength" ? (
-                <div className="grid grid-cols-2 w-full">
-                  <div>
-                    <h1>Planned values:</h1>
-                    <div className="flex">
-                      <input
-                        className="border w-24 p-2"
-                        placeholder="Distance"
-                        value={workout.distance}
-                        onChange={(e) =>
-                          setWorkout((prev) => ({
-                            ...prev,
-                            distance: e.target.value,
-                          }))
-                        }
-                      ></input>
-                      <div className="border w-10 p-2">km</div>
-                      <InputMask
-                        className="border rounded w-24 p-2"
-                        mask="99:99:99"
-                        placeholder="hh:mm:ss"
-                        value={workout.duration}
-                        onChange={(e) =>
-                          setWorkout((prev) => ({
-                            ...prev,
-                            duration: e.target.value,
-                          }))
-                        }
-                      >
-                        {(props: any) => <input {...props} />}
-                      </InputMask>
+                <>
+                  <div className="grid grid-cols-2 w-full">
+                    <div>
+                      <h1>Planned values:</h1>
+                      <div className="flex">
+                        <input
+                          className="border w-24 p-2"
+                          placeholder="Distance"
+                          value={workout.distance}
+                          onChange={(e) =>
+                            setWorkout((prev) => ({
+                              ...prev,
+                              distance: e.target.value,
+                            }))
+                          }
+                        ></input>
+                        <div className="border w-10 p-2">km</div>
+                        <InputMask
+                          className="border rounded w-24 p-2"
+                          mask="99:99:99"
+                          placeholder="hh:mm:ss"
+                          value={workout.duration}
+                          onChange={(e) =>
+                            setWorkout((prev) => ({
+                              ...prev,
+                              duration: e.target.value,
+                            }))
+                          }
+                        >
+                          {(props: any) => <input {...props} />}
+                        </InputMask>
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <h1>Pace:</h1>
-                    <div className="flex justify-center items-center p-2 text-green-600 font-bold	">
-                      {workout.distance && workout.duration
-                        ? `${calculatePace(
-                            workout.distance,
-                            workout.duration
-                          )} min/km`
-                        : ""}
+                    <div>
+                      <h1>Pace:</h1>
+                      <div className="flex justify-center items-center p-2 text-green-600 font-bold	">
+                        {workout.distance && workout.duration
+                          ? `${calculatePace(
+                              workout.distance,
+                              workout.duration
+                            )} min/km`
+                          : ""}
+                      </div>
                     </div>
                   </div>
-                </div>
+                  <div className="grid grid-cols-2 w-full">
+                    <div>
+                      <h1>Completed values:</h1>
+                      <div className="flex">
+                        <input
+                          className="border w-24 p-2"
+                          placeholder="Distance"
+                          value={workout.distance}
+                          onChange={(e) =>
+                            setWorkout((prev) => ({
+                              ...prev,
+                              distance: e.target.value,
+                            }))
+                          }
+                        ></input>
+                        <div className="border w-10 p-2">km</div>
+                        <InputMask
+                          className="border rounded w-24 p-2"
+                          mask="99:99:99"
+                          placeholder="hh:mm:ss"
+                          value={workout.duration}
+                          onChange={(e) =>
+                            setWorkout((prev) => ({
+                              ...prev,
+                              duration: e.target.value,
+                            }))
+                          }
+                        >
+                          {(props: any) => <input {...props} />}
+                        </InputMask>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h1>Pace:</h1>
+                      <div className="flex justify-center items-center p-2 text-green-600 font-bold	">
+                        {workout.distance && workout.duration
+                          ? `${calculatePace(
+                              workout.distance,
+                              workout.duration
+                            )} min/km`
+                          : ""}
+                      </div>
+                    </div>
+                  </div>
+                </>
               ) : (
                 ""
               )}
