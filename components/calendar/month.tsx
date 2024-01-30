@@ -60,13 +60,17 @@ export default function Month({
         );
 
         dayEvents.forEach((event) => {
-          totalDurationSeconds += parseDuration(event.duration); // Convert and sum durations
-          totalDistance += parseFloat(event.distance); // Ensure distance is a number
+          if (event.isComplete && event.postDuration) {
+            totalDurationSeconds += parseDuration(event.postDuration);
+            totalDistance += parseFloat(event.postDistance);
+          }
         });
       });
 
       // Convert total duration back into hh:mm:ss format
       const totalDuration = formatDuration(totalDurationSeconds);
+
+      console.log(totalDuration);
 
       return { totalDuration, totalDistance };
     });

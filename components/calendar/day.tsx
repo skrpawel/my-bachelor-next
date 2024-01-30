@@ -83,17 +83,18 @@ export default function Day({ day, activeFilter }: DayProps) {
             }`}
             onClick={() => updateDayClick(workout.id.toString())}
           >
-            {workout.title ? (
+            {workout.title || workout.type ? (
               <div className="row-span-1 col-span-2 w-full ">
-                <h2 className="mx-4 font-bold border-b">{workout.title}</h2>
+                <div className="border-b mx-4 flex gap-4 items-center">
+                  <h2 className=" font-bold ">{workout.title}</h2>
+                  {activityIcon(workout.type)}
+                </div>
               </div>
             ) : (
               ""
             )}
             <>
-              <div className="row-span-2 text-lg">
-                {activityIcon(workout.type)}
-              </div>
+              <div className="row-span-2 text-lg"></div>
               {workout.distance ? (
                 <div className="col-span-1">{workout.distance} km</div>
               ) : (

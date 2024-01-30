@@ -9,14 +9,10 @@ export async function POST(req: NextRequest) {
     date,
     duration,
     userId,
-    note,
-    effort,
-    postNote,
-    postDistance,
-    postDuration,
+    isComplete,
+    description,
   } = await req.json();
 
-  // Optional: Validate that the user with userId exists
   const userExists = await prisma.user.findUnique({
     where: {
       id: parseInt(userId),
@@ -28,23 +24,19 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const workout = await prisma.workout.create({
+    const event = await prisma.event.create({
       data: {
         title,
         type,
         duration,
         distance,
         date: new Date(date),
-        userId, // associate the workout with the user
+        userId,
         isComplete: false,
-        note,
-        effort,
-        postNote,
-        postDistance,
-        postDuration,
+        description,
       },
     });
-    return NextResponse.json(workout);
+    return NextResponse.json(event);
   } catch (error) {
     console.error("Error when adding workout:", error);
     return NextResponse.json(
