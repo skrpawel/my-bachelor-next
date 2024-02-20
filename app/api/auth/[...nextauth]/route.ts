@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
         if (!email || !password) {
           throw new Error("Brakujący login lub hasło");
         }
-        const user = await prisma.users.findUnique({
+        const user = await prisma.user.findUnique({
           where: {
             email,
           },
