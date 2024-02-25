@@ -98,7 +98,7 @@ export default function Month({
 
   useEffect(() => {
     calculateWeeklyTotals();
-  }, [savedEvents, month]);
+  }, [calculateWeeklyTotals]);
 
   return (
     <div className="grid grid-cols-8 bg-white">

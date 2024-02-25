@@ -32,7 +32,7 @@ export default function Page() {
       const customSession = session as CustomSession;
       getWorkouts(customSession?.user?.id);
     }
-  }, []);
+  }, [getWorkouts, session]);
 
   return (
     <>
