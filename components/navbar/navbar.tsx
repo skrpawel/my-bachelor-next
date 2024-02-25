@@ -30,6 +30,7 @@ const Navbar = () => {
             <NavbarElement href="/calendar" label="Calendar" />
             {session?.user ? (
               <>
+                <NavbarElement href="/notes" label="Notes" />
                 <NavbarElement
                   href="/login"
                   label="Sign out"

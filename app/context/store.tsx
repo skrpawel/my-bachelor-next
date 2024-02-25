@@ -9,6 +9,10 @@ import React, {
 } from "react";
 
 export interface SavedEvent {
+  postDistance: string;
+  postDuration: string;
+  postNote: string;
+  effort: string;
   title: string;
   isComplete: boolean;
   type: string;

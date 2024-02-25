@@ -6,11 +6,6 @@ export async function GET(req: NextRequest) {
 
   try {
     const workouts = await prisma.workout.findMany({
-      orderBy: [
-        {
-          date: "desc",
-        },
-      ],
       where: {
         userId: workoutId,
       },

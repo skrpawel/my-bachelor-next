@@ -1,0 +1,58 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Users {
+  id Int [pk, increment]
+  email String [unique, not null]
+  password String [not null]
+  workouts Workouts [not null]
+  events Events [not null]
+}
+
+Table Workouts {
+  id Int [pk, increment]
+  title String [not null]
+  type WorkoutType [not null]
+  duration String [not null]
+  distance String [not null]
+  date DateTime [not null]
+  userId Int [not null]
+  isComplete Boolean [not null]
+  note String [not null]
+  effort String [not null]
+  postNote String [not null]
+  postDistance String [not null]
+  postDuration String [not null]
+  user Users [not null]
+}
+
+Table Events {
+  id Int [pk, increment]
+  title String [not null]
+  type EventsType [not null]
+  duration String [not null]
+  distance String [not null]
+  date DateTime [not null]
+  userId Int [not null]
+  isComplete Boolean [not null]
+  description String [not null]
+  user Users [not null]
+}
+
+Enum EventsType {
+  Event
+}
+
+Enum WorkoutType {
+  Run
+  Bike
+  Swim
+  Day_off
+  Strength
+  Other
+}
+
+Ref: Workouts.userId > Users.id [delete: Cascade]
+
+Ref: Events.userId > Users.id [delete: Cascade]

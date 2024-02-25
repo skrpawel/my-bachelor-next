@@ -3,22 +3,50 @@ import { BiRun, BiDotsHorizontalRounded } from "react-icons/bi";
 import { GrBike, GrSwim } from "react-icons/gr";
 import { FaCouch } from "react-icons/fa";
 import { IoBarbellSharp } from "react-icons/io5";
+import { MdEmojiEvents } from "react-icons/md";
 
-export function activityIcon(label: string) {
+import {
+  FaRegFaceDizzy,
+  FaRegFaceFrown,
+  FaRegFaceLaughBeam,
+  FaRegFaceGrinWide,
+  FaRegFaceSmile,
+} from "react-icons/fa6";
+
+export function activityIcon(label: string, size: number = 20) {
   switch (label) {
     case "Run":
-      return <BiRun />;
+      return <BiRun size={size} />;
     case "Bike":
-      return <GrBike />;
+      return <GrBike size={size} />;
     case "Swim":
-      return <GrSwim />;
+      return <GrSwim size={size} />;
     case "Day off":
-      return <FaCouch />;
+      return <FaCouch size={size} />;
     case "Strength":
-      return <IoBarbellSharp />;
+      return <IoBarbellSharp size={size} />;
     case "Other":
-      return <BiDotsHorizontalRounded />;
+      return <BiDotsHorizontalRounded size={size} />;
+    case "Event":
+      return <MdEmojiEvents size={size} />;
     default:
       return "";
+  }
+}
+
+export function effortIcon(label: number) {
+  switch (label) {
+    case 0:
+      return <FaRegFaceDizzy />;
+    case 1:
+      return <FaRegFaceFrown />;
+    case 2:
+      return <FaRegFaceSmile />;
+    case 3:
+      return <FaRegFaceGrinWide />;
+    case 4:
+      return <FaRegFaceLaughBeam />;
+    default:
+      return undefined;
   }
 }

@@ -6,6 +6,8 @@ interface CalendarEvent {
   duration: string;
   distance: string;
   userId: number;
+  note: string;
+  postNote: string;
 }
 
 export const postWorkout = async (workoutData: CalendarEvent) => {
@@ -19,6 +21,8 @@ export const postWorkout = async (workoutData: CalendarEvent) => {
 };
 
 export const updateWorkout = async (id: string, workoutData: CalendarEvent) => {
+  console.log(workoutData);
+
   try {
     const response = await axios.put(
       `/api/workout/update?id=${id}`,

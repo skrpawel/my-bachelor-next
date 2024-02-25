@@ -9,22 +9,32 @@ datasource db {
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id       Int       @id @default(autoincrement())
   email    String    @unique
+  role     Role      @default(USER)
   password String
   workouts Workout[]
 }
 
 model Workout {
-  id         Int      @id @default(autoincrement())
-  title      String
-  type       String
-  duration   String
-  distance   String   @default("23")
-  date       DateTime
-  userId     Int
-  isComplete Boolean
-  note       String
-  user       User     @relation(fields: [userId], references: [id])
+  id           Int      @id @default(autoincrement())
+  title        String
+  type         String
+  duration     String
+  distance     String   @default("23")
+  date         DateTime
+  userId       Int
+  isComplete   Boolean
+  note         String
+  effort       String
+  postNote     String
+  postDistance String
+  postDuration String
+  user         User     @relation(fields: [userId], references: [id])
 }

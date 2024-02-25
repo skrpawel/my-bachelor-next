@@ -13,16 +13,15 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const { email, password } = credentials ?? {};
         if (!email || !password) {
-          throw new Error("Missing username or password");
+          throw new Error("Brakujący login lub hasło");
         }
         const user = await prisma.user.findUnique({
           where: {
             email,
           },
         });
-        // if user doesn't exist or password doesn't match
         if (!user || !(await compare(password, user.password))) {
-          throw new Error("Invalid username or password");
+          throw new Error("Zły login lub hasło");
         }
         return user;
       },
